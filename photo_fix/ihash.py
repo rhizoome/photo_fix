@@ -1,9 +1,12 @@
 import sys
+import traceback
 from functools import partial
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 
-from PIL import Image, UnidentifiedImageError
+import tqdm
+from imagehash import ImageHash
+from PIL import Image
 from pyheif_pillow_opener import register_heif_opener
 
 from .raw import register_raw_opener
@@ -21,12 +24,12 @@ def eprint(*args, **kwargs):
 def hash_image(func, item):
     try:
         img = Image.open(bytes(item))
-        ihash = func(img)
+        img.save("/tmp/t.jpg")
+        # ihash = func(img)
+        ihash = None
         return (ihash, item)
-    except UnidentifiedImageError:
-        return (UnidentifiedImageError, item)
-    except OSError:
-        return (OSError, item)
+    except Exception as e:
+        return (e, item)
 
 
 def find(dir: Path, images):
@@ -41,17 +44,21 @@ def find(dir: Path, images):
 def hash_dir(dir: Path, images, func):
     image_list = []
     find(dir, image_list)
-    image_list = hash_list(image_list, func)
-    for ihash, item in image_list:
-        if ihash is UnidentifiedImageError:
-            eprint(f"Unknown image format {item.absolute()}")
-        elif ihash is OSError:
-            eprint(f"Broken image format {item.absolute()}")
-        else:
+    image_iter = hash_list(image_list, func)
+    for ihash, item in image_iter:
+        if isinstance(ihash, ImageHash):
             images[str(ihash)].append(str(item))
+        else:
+            path = item.absolute().resolve()
+            print(f"{type(ihash).__name__} could not read image: {path}")
 
 
 def hash_list(image_list, func):
-    with Pool() as pool:
+    with Pool(cpu_count() + 1) as pool:
         hash_func = partial(hash_image, func)
-        return pool.map(hash_func, image_list)
+        with tqdm.tqdm(total=len(image_list)) as pbar:
+            iter = pool.imap_unordered(hash_func, image_list)
+            # iter = map(hash_func, image_list)
+            for item in iter:
+                pbar.update()
+                yield item

@@ -1,42 +1,49 @@
+from pathlib import Path
+
 import rawpy
 from PIL import Image, ImageFile
 
+exts = [".nef", ".cr2", ".dng", ".arw"]
 
-class RawImageFile(ImageFile.ImageFile):
-    format = "RAW"
+
+class RawPyImageFile(ImageFile.ImageFile):
+    format = "RAWPY"
     format_description = "camera raw image"
 
     def _open(self):
-        raw = rawpy.imread(self.fp)
-        array = raw.postprocess()
-
-        # size in pixels (width, height)
-        self._size = (array.shape[1], array.shape[0])
-
-        # mode setting
-        typekey = (1, 1) + array.shape[2:], array.__array_interface__["typestr"]
         try:
-            self.mode = Image._fromarray_typemap[typekey][1]
-        except KeyError as e:
-            raise TypeError("Cannot handle this data type: %s, %s" % typekey) from e
+            raw = rawpy.imread(self.fp)
+            array = raw.postprocess()
 
-        # TODO extract exif?
+            # size in pixels (width, height)
+            self._size = (array.shape[1], array.shape[0])
 
-        offset = self.fp.tell()
-        self.tile = [
-            (
-                "RAW",
-                (0, 0) + self.size,
-                offset,
+            # mode setting
+            typekey = (1, 1) + array.shape[2:], array.__array_interface__["typestr"]
+            try:
+                self.mode = Image._fromarray_typemap[typekey][1]
+            except KeyError as e:
+                raise TypeError("Cannot handle this data type: %s, %s" % typekey) from e
+
+            # TODO extract exif?
+
+            offset = self.fp.tell()
+            self.tile = [
                 (
-                    array,
-                    self.mode,
-                ),
-            )
-        ]
+                    "RAWPYDEC",
+                    (0, 0) + self.size,
+                    offset,
+                    (
+                        array,
+                        self.mode,
+                    ),
+                )
+            ]
+        except Exception:
+            raise TypeError("rawpy can't decode this")
 
 
-class RawDecoder(ImageFile.PyDecoder):
+class RawPyDecoder(ImageFile.PyDecoder):
     _pulls_fd = True
 
     def decode(self, buffer):
@@ -47,6 +54,6 @@ class RawDecoder(ImageFile.PyDecoder):
 
 
 def register_raw_opener():
-    Image.register_open("RAW", RawImageFile)
-    Image.register_decoder("RAW", RawDecoder)
-    Image.register_extensions(RawImageFile.format, [".nef", ".cr2", ".dng", ".arw"])
+    Image.register_open(RawPyImageFile.format, RawPyImageFile)
+    Image.register_decoder("RAWPYDEC", RawPyDecoder)
+    Image.register_extensions(RawPyImageFile.format, exts)
