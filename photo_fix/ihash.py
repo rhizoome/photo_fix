@@ -44,7 +44,7 @@ def hash_dir(dir: Path, images, func):
             eprint(f"Unknown image format {item.absolute()}")
         elif ihash is OSError:
             eprint(f"Broken image format {item.absolute()}")
-        images[ihash].append(item)
+        images[str(ihash)].append(str(item))
 
 
 def hash_list(image_list, func):

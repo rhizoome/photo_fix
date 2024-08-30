@@ -1,7 +1,6 @@
 import bz2
 import json
 import os
-import pickle
 from collections import defaultdict
 from pathlib import Path
 
@@ -11,18 +10,18 @@ import imagehash
 from .ihash import hash_dir
 
 
-def compressed_pickle(file_, data):
-    if not file_.suffix == ".pbz2":
-        raise ValueError("file must have the .pbz2 extension")
-    with bz2.BZ2File(str(file_), "wb") as f:
-        pickle.dump(data, f)
+def compressed_json(file_, data):
+    if not file_.suffix == ".jbz2":
+        raise ValueError("file must have the .jbz2 extension")
+    with bz2.open(str(file_), "wt") as f:
+        json.dump(data, f)
 
 
-def decompress_pickle(file_):
-    if not file_.suffix == ".pbz2":
-        raise ValueError("file must have the .pbz2 extension")
-    with bz2.BZ2File(file_, "rb") as f:
-        return pickle.load(f)
+def decompress_json(file_):
+    if not file_.suffix == ".jbz2":
+        raise ValueError("file must have the .jbz2 extension")
+    with bz2.open(file_, "rt") as f:
+        return json.load(f)
 
 
 def dump(directory, images):
@@ -32,14 +31,11 @@ def dump(directory, images):
 def check_hashes(reference, compare, func):
     reference = Path(reference)
     compare = Path(compare)
-    _, reference = decompress_pickle(reference)
-    directory, compare = decompress_pickle(compare)
+    _, reference = decompress_json(reference)
+    directory, compare = decompress_json(compare)
     for ihash, images in compare.items():
         if func(ihash, reference):
-            ref_images = reference[ihash]
-            images = [image for image in images if image not in ref_images]
-            if images:
-                dump(directory, images)
+            dump(directory, images)
 
 
 @click.group()
@@ -63,10 +59,12 @@ def run():
 def ihash(directory, output):
     directory = Path(directory).absolute().resolve()
     output = Path(output).absolute().resolve()
+    if not output.suffix == ".jbz2":
+        raise ValueError("file must have the .jbz2 extension")
     os.chdir(directory)
     images = defaultdict(list)
     hash_dir(Path("."), images, imagehash.dhash)
-    compressed_pickle(output, (directory, images))
+    compressed_json(output, (str(directory), images))
 
 
 @run.command()
@@ -81,7 +79,7 @@ def ihash(directory, output):
 )
 def duplicates(input):
     input = Path(input)
-    directory, input = decompress_pickle(input)
+    directory, input = decompress_json(input)
     for images in input.values():
         if len(images) > 1:
             dump(directory, images)
