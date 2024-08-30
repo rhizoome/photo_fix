@@ -6,7 +6,6 @@ exts = [".nef", ".cr2", ".dng", ".arw"]
 
 starts = set(
     [
-        "TIFF image data",
         "XML 1.0 document",
         "JPEG image data",
         "Rich Text Format data",
