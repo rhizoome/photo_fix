@@ -60,8 +60,6 @@ class RawPyImageFile(ImageFile.ImageFile):
                 )
             ]
         except Exception as e:
-            if not isinstance(e, TypeError):
-                print(sig)
             raise TypeError("rawpy can't decode this")
 
 
