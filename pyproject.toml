@@ -13,9 +13,24 @@ ImageHash = "^4.2.1"
 click = "^8.0.1"
 pyheif-pillow-opener = "^0.1.0"
 rawpy = "^0.16.0"
+tqdm = "^4.61.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+keyring = "^23.0.1"
+SecretStorage = "^3.3.1"
+mypy = "^0.910"
+pdbpp = "^0.10.3"
+black = "^21.7b0"
+isort = "^5.9.2"
+python-lsp-server = "^1.1.0"
+flake8 = "^3.9.2"
+flake8-bugbear = "^21.4.3"
+flake8-debugger = "^4.0.0"
+flake8-isort = "^4.0.0"
+flake8-docstrings = "^1.6.0"
+flake8-string-format = "^0.3.0"
+flake8-tuple = "^0.4.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
