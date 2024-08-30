@@ -4,6 +4,9 @@ from multiprocessing import Pool
 from pathlib import Path
 
 from PIL import Image, UnidentifiedImageError
+from pyheif_pillow_opener import register_heif_opener
+
+register_heif_opener()
 
 ignore = [".mp4", ".mov"]
 
