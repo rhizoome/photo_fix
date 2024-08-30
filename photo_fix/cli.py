@@ -36,7 +36,10 @@ def check_hashes(reference, compare, func):
     directory, compare = decompress_pickle(compare)
     for ihash, images in compare.items():
         if func(ihash, reference):
-            dump(directory, images)
+            ref_images = reference[ihash]
+            images = [image for image in images if image not in ref_images]
+            if images:
+                dump(directory, images)
 
 
 @click.group()
