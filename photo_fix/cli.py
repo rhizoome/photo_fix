@@ -10,21 +10,24 @@ import imagehash
 from .ihash import hash_dir
 
 
-def compressed_json(file_, data):
-    if not file_.suffix == ".json.bz2":
+def check_ext(file_):
+    if not str(file_).endswith(".json.bz2"):
         raise ValueError("file must have the .json.bz2 extension")
+
+
+def compressed_json(file_, data):
+    check_ext(file_)
     with bz2.open(str(file_), "wt") as f:
         json.dump(data, f)
 
 
 def decompress_json(file_):
-    if not file_.suffix == ".json.bz2":
-        raise ValueError("file must have the .json.bz2 extension")
     with bz2.open(file_, "rt") as f:
         return json.load(f)
 
 
 def dump(directory, images):
+    check_ext(file_)
     print(json.dumps([str(Path(directory, image).resolve()) for image in images]))
 
 
@@ -59,8 +62,7 @@ def run():
 def ihash(directory, output):
     directory = Path(directory).absolute().resolve()
     output = Path(output).absolute().resolve()
-    if not output.suffix == ".json.bz2":
-        raise ValueError("file must have the .json.bz2 extension")
+    check_ext(output)
     os.chdir(directory)
     images = defaultdict(list)
     hash_dir(Path("."), images, imagehash.dhash)
