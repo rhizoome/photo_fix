@@ -18,7 +18,9 @@ def hash_image(func, item):
         hash = func(img)
         return (hash, item)
     except UnidentifiedImageError:
-        return (None, item)
+        return (UnidentifiedImageError, item)
+    except OSError:
+        return (OSError, item)
 
 
 def find(dir: Path, images):
@@ -35,8 +37,10 @@ def hash_dir(dir: Path, images, func):
     find(dir, image_list)
     image_list = hash_list(image_list, func)
     for hash, item in image_list:
-        if hash is None:
+        if hash is UnidentifiedImageError:
             eprint(f"Unknown image format {item.absolute()}")
+        elif hash is OSError:
+            eprint(f"Broken image format {item.absolute()}")
         images[hash].append(item)
 
 

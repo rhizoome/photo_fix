@@ -1,4 +1,5 @@
 import bz2
+import json
 import os
 import pickle
 from collections import defaultdict
@@ -53,7 +54,9 @@ def duplicates(input):
     directory, images = decompress_pickle(input)
     for images in images.values():
         if len(images) > 1:
-            print([str(Path(directory, image).resolve()) for image in images])
+            print(
+                json.dumps([str(Path(directory, image).resolve()) for image in images])
+            )
 
 
 @run.command()
