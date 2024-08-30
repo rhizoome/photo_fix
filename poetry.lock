@@ -191,6 +191,17 @@ python-versions = ">=3.5"
 numpy = ">=1.13.3"
 
 [[package]]
+name = "rawpy"
+version = "0.16.0"
+description = "RAW image processing for Python, a wrapper for libraw"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "scipy"
 version = "1.6.1"
 description = "SciPy: Scientific Library for Python"
@@ -220,7 +231,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5a2fd08edede58cf99b5f229312e646404bcf159e5edb3aac0744289e13b1b0e"
+content-hash = "adaec7ee9e4eeca3f345a73159b7fe53dbc2072204a35f8ada7c87f7d569a981"
 
 [metadata.files]
 atomicwrites = [
@@ -429,6 +440,20 @@ pywavelets = [
     {file = "PyWavelets-1.1.1-cp39-cp39-win32.whl", hash = "sha256:2b634a54241c190ee989a4af87669d377b37c91bcc9cf0efe33c10ff847f7841"},
     {file = "PyWavelets-1.1.1-cp39-cp39-win_amd64.whl", hash = "sha256:732bab78435c48be5d6bc75486ef629d7c8f112e07b313bf1f1a2220ab437277"},
     {file = "PyWavelets-1.1.1.tar.gz", hash = "sha256:1a64b40f6acb4ffbaccce0545d7fc641744f95351f62e4c6aaa40549326008c9"},
+]
+rawpy = [
+    {file = "rawpy-0.16.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:65b5a60d72d637d4a69bb6e2701b6d504c730f342e1328446bbc5997964e47bb"},
+    {file = "rawpy-0.16.0-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:331a7947b6d8d5737d20c9b7337c51fdefcbea4bde372542cf1e8837dd9b9a66"},
+    {file = "rawpy-0.16.0-cp36-cp36m-win_amd64.whl", hash = "sha256:8eb562c261c51c0bd94b43f3ed4e69d3af72b77cd435ef8db9540f736f7b019b"},
+    {file = "rawpy-0.16.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:10260c65c24216a5cc566238d03459ff708076640758b807b3b6165da914210e"},
+    {file = "rawpy-0.16.0-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:e7c07159accb6858b68631f60ec5616fe62fa0b665d9e4d8dda42c1d6e658067"},
+    {file = "rawpy-0.16.0-cp37-cp37m-win_amd64.whl", hash = "sha256:0138672ffb7ba53d41ec80d792cd2c5bfbf46b45dc51574a38fd2205030833de"},
+    {file = "rawpy-0.16.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:c702e711b97057b88120a66a4f3be6fab65ecc646683fe35cdc5ef0c6a19dd1c"},
+    {file = "rawpy-0.16.0-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:b12e824181b2cb71f5c2b6801e264e6891752385d82d97ba4b81d961efb6ff50"},
+    {file = "rawpy-0.16.0-cp38-cp38-win_amd64.whl", hash = "sha256:651f9fdad076bb55052a4839dcc7c874d51904f7788c90e543c0dbba548f229f"},
+    {file = "rawpy-0.16.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:fbf1a304a0c6ea6e9d4b26e3057575b6822046087142294f7842b111d2c0f6b0"},
+    {file = "rawpy-0.16.0-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:f76d67171ddfe6cda579c81d8b091ff1ead27b6ed2b93f8f913d2f92c7cea500"},
+    {file = "rawpy-0.16.0-cp39-cp39-win_amd64.whl", hash = "sha256:e6ffd2cbbe119fbc91bfd364abffea0f4f8d0d92a86505cf68d51f064eaab91f"},
 ]
 scipy = [
     {file = "scipy-1.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:a15a1f3fc0abff33e792d6049161b7795909b40b97c6cc2934ed54384017ab76"},

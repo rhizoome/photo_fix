@@ -6,7 +6,10 @@ from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 from pyheif_pillow_opener import register_heif_opener
 
+from .raw import register_raw_opener
+
 register_heif_opener()
+register_raw_opener()
 
 ignore = [".mp4", ".mov"]
 
