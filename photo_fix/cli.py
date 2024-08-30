@@ -59,13 +59,27 @@ def run():
 @click.argument(
     "output", type=click.Path(writable=True, dir_okay=False, file_okay=True)
 )
-def ihash(directory, output):
+@click.option(
+    "--hash-type",
+    "-h",
+    type=click.Choice(["avg", "diff", "percep", "wave"], case_sensitive=False),
+    default="diff",
+)
+def ihash(directory, output, hash_type):
+    if hash_type == "diff":
+        func = imagehash.dhash
+    elif hash_type == "avg":
+        func = imagehash.average_hash
+    elif hash_type == "percep":
+        func = imagehash.phash
+    elif hash_type == "wave":
+        func = imagehash.whash
     directory = Path(directory).absolute().resolve()
     output = Path(output).absolute().resolve()
     check_ext(output)
     os.chdir(directory)
     images = defaultdict(list)
-    hash_dir(Path("."), images, imagehash.dhash)
+    hash_dir(Path("."), images, func)
     compressed_json(output, (str(directory), images))
 
 
