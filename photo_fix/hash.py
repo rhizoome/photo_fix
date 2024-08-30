@@ -1,3 +1,4 @@
+import sys
 from functools import partial
 from multiprocessing import Pool
 from pathlib import Path
@@ -7,10 +8,17 @@ from PIL import Image, UnidentifiedImageError
 ignore = [".mp4", ".mov"]
 
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
 def hash_image(func, item):
-    img = Image.open(bytes(item))
-    hash = func(img)
-    return (hash, item)
+    try:
+        img = Image.open(bytes(item))
+        hash = func(img)
+        return (hash, item)
+    except UnidentifiedImageError:
+        return (None, item)
 
 
 def find(dir: Path, images):
@@ -27,6 +35,8 @@ def hash_dir(dir: Path, images, func):
     find(dir, image_list)
     image_list = hash_list(image_list, func)
     for hash, item in image_list:
+        if hash is None:
+            eprint(f"Unknown image format {item.absolute()}")
         images[hash].append(item)
 
 
