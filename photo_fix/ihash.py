@@ -61,4 +61,5 @@ def hash_list(image_list, func):
                 if isinstance(ihash, ImageHash):
                     yield item
                 else:
-                    print(f"{type(item[0]).__name__} could not read image: {path}")
+                    if not path.name.startswith("."):
+                        print(f"{type(item[0]).__name__} could not read image: {path}")
