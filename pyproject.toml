@@ -4,9 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["Jean-Louis Fuchs <safe.pen2857@rhizoome.ch>"]
 
+[tool.poetry.scripts]
+photo-fix = 'photo_fix.cli:run'
+
 [tool.poetry.dependencies]
 python = "^3.9"
 ImageHash = "^4.2.1"
+click = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
