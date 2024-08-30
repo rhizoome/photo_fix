@@ -8,7 +8,7 @@ from pathlib import Path
 import click
 import imagehash
 
-from .hash import hash_dir
+from .ihash import hash_dir
 
 
 def compressed_pickle(file_, data):
@@ -34,8 +34,8 @@ def check_hashes(reference, compare, func):
     compare = Path(compare)
     _, reference = decompress_pickle(reference)
     directory, compare = decompress_pickle(compare)
-    for hash, images in compare.items():
-        if func(hash, reference):
+    for ihash, images in compare.items():
+        if func(ihash, reference):
             dump(directory, images)
 
 
@@ -94,7 +94,7 @@ def duplicates(input):
     type=click.Path(exists=True, readable=True, dir_okay=False, file_okay=True),
 )
 def not_in_ref(reference, compare):
-    check_hashes(reference, compare, lambda hash, reference: hash not in reference)
+    check_hashes(reference, compare, lambda ihash, reference: ihash not in reference)
 
 
 @run.command()
@@ -107,4 +107,4 @@ def not_in_ref(reference, compare):
     type=click.Path(exists=True, readable=True, dir_okay=False, file_okay=True),
 )
 def in_ref(reference, compare):
-    check_hashes(reference, compare, lambda hash, reference: hash in reference)
+    check_hashes(reference, compare, lambda ihash, reference: ihash in reference)

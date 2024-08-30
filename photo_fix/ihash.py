@@ -18,8 +18,8 @@ def eprint(*args, **kwargs):
 def hash_image(func, item):
     try:
         img = Image.open(bytes(item))
-        hash = func(img)
-        return (hash, item)
+        ihash = func(img)
+        return (ihash, item)
     except UnidentifiedImageError:
         return (UnidentifiedImageError, item)
     except OSError:
@@ -39,10 +39,10 @@ def hash_dir(dir: Path, images, func):
     image_list = []
     find(dir, image_list)
     image_list = hash_list(image_list, func)
-    for hash, item in image_list:
-        if hash is UnidentifiedImageError:
+    for ihash, item in image_list:
+        if ihash is UnidentifiedImageError:
             eprint(f"Unknown image format {item.absolute()}")
-        elif hash is OSError:
+        elif ihash is OSError:
             eprint(f"Broken image format {item.absolute()}")
         images[hash].append(item)
 
