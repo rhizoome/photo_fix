@@ -4,7 +4,22 @@ from PIL import Image, ImageFile
 
 exts = [".nef", ".cr2", ".dng", ".arw"]
 
-starts = ["TIFF image data", "XML 1.0 document", "JPEG image data"]
+starts = set(
+    [
+        "TIFF image data",
+        "XML 1.0 document",
+        "JPEG image data",
+        "Rich Text Format data",
+        "PostScript document text",
+        "PNG image data",
+        "Netpbm image data",
+        "RIFF (little-endian) data",
+        "SQLite 3.x database",
+        "Adobe Photoshop Image",
+        "ASCII text",
+        "PDF document",
+    ]
+)
 
 
 class RawPyImageFile(ImageFile.ImageFile):
