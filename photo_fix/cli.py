@@ -11,15 +11,15 @@ from .ihash import hash_dir
 
 
 def compressed_json(file_, data):
-    if not file_.suffix == ".jbz2":
-        raise ValueError("file must have the .jbz2 extension")
+    if not file_.suffix == ".json.bz2":
+        raise ValueError("file must have the .json.bz2 extension")
     with bz2.open(str(file_), "wt") as f:
         json.dump(data, f)
 
 
 def decompress_json(file_):
-    if not file_.suffix == ".jbz2":
-        raise ValueError("file must have the .jbz2 extension")
+    if not file_.suffix == ".json.bz2":
+        raise ValueError("file must have the .json.bz2 extension")
     with bz2.open(file_, "rt") as f:
         return json.load(f)
 
@@ -59,8 +59,8 @@ def run():
 def ihash(directory, output):
     directory = Path(directory).absolute().resolve()
     output = Path(output).absolute().resolve()
-    if not output.suffix == ".jbz2":
-        raise ValueError("file must have the .jbz2 extension")
+    if not output.suffix == ".json.bz2":
+        raise ValueError("file must have the .json.bz2 extension")
     os.chdir(directory)
     images = defaultdict(list)
     hash_dir(Path("."), images, imagehash.dhash)
