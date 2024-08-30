@@ -1,5 +1,4 @@
 import sys
-import traceback
 from functools import partial
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
@@ -17,16 +16,11 @@ register_raw_opener()
 ignore = [".mp4", ".mov"]
 
 
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-
-
 def hash_image(func, item):
     try:
         img = Image.open(bytes(item))
         img.save("/tmp/t.jpg")
-        # ihash = func(img)
-        ihash = None
+        ihash = func(img)
         return (ihash, item)
     except Exception as e:
         return (e, item)
@@ -45,12 +39,8 @@ def hash_dir(dir: Path, images, func):
     image_list = []
     find(dir, image_list)
     image_iter = hash_list(image_list, func)
-    for ihash, item in image_iter:
-        if isinstance(ihash, ImageHash):
-            images[str(ihash)].append(str(item))
-        else:
-            path = item.absolute().resolve()
-            print(f"{type(ihash).__name__} could not read image: {path}")
+    for ihash, path in image_iter:
+        images[str(ihash)].append(str(path))
 
 
 def hash_list(image_list, func):
@@ -60,5 +50,13 @@ def hash_list(image_list, func):
             iter = pool.imap_unordered(hash_func, image_list)
             # iter = map(hash_func, image_list)
             for item in iter:
+                ihash, path = item
                 pbar.update()
-                yield item
+                name = str(path.name)
+                space = " " * (30 - len(name))
+                pbar.set_description(f"{name}{space}")
+                path = path.absolute().resolve()
+                if isinstance(ihash, ImageHash):
+                    yield item
+                else:
+                    print(f"{type(item[0]).__name__} could not read image: {path}")

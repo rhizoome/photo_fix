@@ -1,9 +1,10 @@
-from pathlib import Path
-
+import magic
 import rawpy
 from PIL import Image, ImageFile
 
 exts = [".nef", ".cr2", ".dng", ".arw"]
+
+starts = ["TIFF image data", "XML 1.0 document", "JPEG image data"]
 
 
 class RawPyImageFile(ImageFile.ImageFile):
@@ -12,6 +13,10 @@ class RawPyImageFile(ImageFile.ImageFile):
 
     def _open(self):
         try:
+            sig = magic.from_file(self.filename)
+            for start in starts:
+                if sig.startswith(start):
+                    raise TypeError("rawpy can't decode this")
             raw = rawpy.imread(self.fp)
             array = raw.postprocess()
 
@@ -39,7 +44,9 @@ class RawPyImageFile(ImageFile.ImageFile):
                     ),
                 )
             ]
-        except Exception:
+        except Exception as e:
+            if not isinstance(e, TypeError):
+                print(sig)
             raise TypeError("rawpy can't decode this")
 
 

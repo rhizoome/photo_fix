@@ -14,6 +14,7 @@ click = "^8.0.1"
 pyheif-pillow-opener = "^0.1.0"
 rawpy = "^0.16.0"
 tqdm = "^4.61.2"
+python-magic = "^0.4.24"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
