@@ -2,7 +2,7 @@ from functools import partial
 from multiprocessing import Pool
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 ignore = [".mp4", ".mov"]
 

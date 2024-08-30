@@ -1,4 +1,5 @@
 import bz2
+import os
 import pickle
 from collections import defaultdict
 from pathlib import Path
@@ -38,19 +39,21 @@ def run():
     "output", type=click.Path(writable=True, dir_okay=False, file_okay=True)
 )
 def ihash(directory, output):
-    directory = Path(directory)
+    directory = Path(directory).absolute().resolve()
+    output = Path(output).absolute().resolve()
+    os.chdir(directory)
     images = defaultdict(list)
-    hash_dir(directory, images, imagehash.dhash)
-    compressed_pickle(output, images)
+    hash_dir(Path("."), images, imagehash.dhash)
+    compressed_pickle(output, (directory, images))
 
 
 @run.command()
 @click.argument("input", type=click.Path(readable=True, dir_okay=False, file_okay=True))
 def duplicates(input):
-    images = decompress_pickle(input)
+    directory, images = decompress_pickle(input)
     for images in images.values():
         if len(images) > 1:
-            print(images)
+            print([str(Path(directory, image).resolve()) for image in images])
 
 
 @run.command()
