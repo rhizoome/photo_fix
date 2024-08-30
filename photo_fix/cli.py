@@ -4,6 +4,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import click
+import imagehash
 
 from .hash import hash_dir
 
@@ -39,7 +40,7 @@ def run():
 def ihash(directory, output):
     directory = Path(directory)
     images = defaultdict(list)
-    hash_dir(directory, images)
+    hash_dir(directory, images, imagehash.dhash)
     compressed_pickle(output, images)
 
 

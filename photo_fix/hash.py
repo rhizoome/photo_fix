@@ -1,15 +1,15 @@
+from functools import partial
 from multiprocessing import Pool
 from pathlib import Path
 
-import imagehash
 from PIL import Image
 
 ignore = [".mp4", ".mov"]
 
 
-def hash_image(item):
+def hash_image(func, item):
     img = Image.open(bytes(item))
-    hash = imagehash.average_hash(img)
+    hash = func(img)
     return (hash, item)
 
 
@@ -22,10 +22,15 @@ def find(dir: Path, images):
                 images.append(item)
 
 
-def hash_dir(dir: Path, images):
+def hash_dir(dir: Path, images, func):
     image_list = []
     find(dir, image_list)
-    with Pool() as pool:
-        image_list = pool.map(hash_image, image_list)
+    image_list = hash_list(image_list, func)
     for hash, item in image_list:
         images[hash].append(item)
+
+
+def hash_list(image_list, func):
+    with Pool() as pool:
+        hash_func = partial(hash_image, func)
+        return pool.map(hash_func, image_list)
