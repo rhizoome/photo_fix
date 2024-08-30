@@ -2,6 +2,7 @@ import sys
 from functools import partial
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
+from random import shuffle
 
 import tqdm
 from imagehash import ImageHash
@@ -44,6 +45,7 @@ def hash_dir(dir: Path, images, func):
 
 
 def hash_list(image_list, func):
+    shuffle(image_list)
     with Pool(cpu_count() + 1) as pool:
         hash_func = partial(hash_image, func)
         with tqdm.tqdm(total=len(image_list)) as pbar:
