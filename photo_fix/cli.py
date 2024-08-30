@@ -22,12 +22,12 @@ def compressed_json(file_, data):
 
 
 def decompress_json(file_):
+    check_ext(file_)
     with bz2.open(file_, "rt") as f:
         return json.load(f)
 
 
 def dump(directory, images):
-    check_ext(file_)
     print(json.dumps([str(Path(directory, image).resolve()) for image in images]))
 
 
